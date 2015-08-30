@@ -4,7 +4,7 @@ subtitle    :
 author      : Vinay Mandal
 job         : 
 framework   : revealjs     # {io2012, html5slides, shower, dzslides, ...}
-highlighter : prettify  # {highlight.js, prettify, highlight}
+highlighter : highlight  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      # 
 widgets     : []            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft}
@@ -20,7 +20,7 @@ knit        : slidify::knit2slides
 --- .class #id 
 
 ## Motivation
-1. Most recommendation dont use review texts
+1. Most recommendation don't use review texts
 2. Real World data
 3. Graphs
 
@@ -91,16 +91,16 @@ Neo4j with "py2neo". Example:
 ```
 from py2neo import Node, Relationship, Graph
 graph = Graph()
-userNode = Node('Seluser', name='name', id=jsonData'user_id')
+userNode = Node('User', name='name', id=jsonData'user_id')
 topicNode = Node('topics', 'key', topicKey)
-likes = Relationship(user, 'topiclike', topic)
+likes = Relationship(userNode, 'topiclike', topicNode)
 graph.create(likes)
 ```
 
 ---
 
 ## User &#8594; Likes &#8594; Topic
-![width](assets/img/topic_graph.png)
+![height](assets/img/topic_graph.png)
 
 ---
 
