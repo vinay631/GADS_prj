@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Automated Topic Detection and Social Recommendation using Latent Dirichlet Allocation</title>
+  <meta name="description" content="">
+  <meta name="author" content="Vinay Mandal">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="stylesheet" href="libraries/frameworks/revealjs/css/reveal.min.css">
+  <link rel="stylesheet" href="libraries/frameworks/revealjs/css/theme/default.css" id="theme">
+  <link rel="stylesheet" href="libraries/highlighters/prettify/css/tomorrow.css" id="theme">
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->  <link rel="stylesheet" href = "assets/css/ribbons.css">
+
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section class='' data-state='' id='slide-1'>
+  <h2>Automated Topic Detection and Social Recommendation using LDA</h2>
+  <h3>Vinay Mandal</h3>
+
+<h4>2015-09-01</h4>
+
+</section>
+<section class='class' data-state='' id='id'>
+  <h2>Motivation</h2>
+  <ol>
+<li>Most recommendation dont use review texts</li>
+<li>Real World data</li>
+<li>Graphs</li>
+</ol>
+
+</section>
+<section class='' data-state='' id='slide-3'>
+  <h2>The dataset</h2>
+  <p>Number of Businesses: <span style="color:green; font-weight:bold">61184</span>
+<br>
+Number of Users: <span style="color:green; font-weight:bold">366715</span>
+<br>
+Number of Reviews: <span style="color:green; font-weight:bold">1569264</span></p>
+
+</section>
+<section class='' data-state='' id='slide-4'>
+  <h2>Methodology</h2>
+  <ol>
+<li>Uncover hidden dimensions of ratings and review text combined</li>
+<li>Use the hidden dimensions from review texts to find user preference</li>
+<li>Build a graph database of user - prefers - latent topic</li>
+<li>Use the graph to recommend new friends</li>
+</ol>
+
+</section>
+<section class='' data-state='' id='slide-5'>
+  <h2>Methodology</h2>
+  <h3>Training</h3>
+
+<p><span style="font-weight:bold; font-size:40pt";>Tokenize Reviews<span>
+<span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
+<span style="font-weight:bold; font-size:40pt";>Remove stop words<span>
+<span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
+<span style="font-weight:bold; font-size:40pt";>POS Tagging</span>
+<span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
+<span style="font-weight:bold; font-size:40pt";>Lemmatize<span>
+<span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
+<span style="font-weight:bold; font-size:40pt";>Train LDA</span>
+<span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
+<span style="font-weight:bold; font-size:40pt";>Label latent topics</span></p>
+
+</section>
+<section class='' data-state='' id='slide-6'>
+  <h2>Latent Dirichlet Allocation</h2>
+  <p>&quot;...is a generative model that allows sets of observations to be explained by unobserved groups that explain why some parts of the data are similar.&quot; 
+<br></p>
+
+<ul>
+<li>In LDA, a document is a mixture of a small number of topics and that each word&#39;s creation is attributable to one of the document&#39;s topics </li>
+<li>LDA is similar to LSA except in LDA topic distribution is assumed to have Dirichlet prior.</li>
+<li>Using python package &quot;gensim&quot;</li>
+</ul>
+
+</section>
+<section class='' data-state='' id='slide-7'>
+  <h2>Model prediction example</h2>
+  <p><span style="color:#EAB9B9">&quot;I love this place and eat here at least once a week. Their pad si yew, pad Thai, dumplings, Siam rolls, and their curries are their best dishes. Especially the curry. You can&#39;t go wrong at Thai moon, so I suggest you go and enjoy the food!&quot;</span>
+<br><br>
+Model prediction: 
+<br><span style="color:green">[&#39;scores&#39;: u&#39;0.060*thai + 0.036*food + 0.032*curry + 0.028*lunch + 0.027*spicy + 0.023*place + 0.021*tea + 0.019*dish + 0.017*chicken + 0.015*time&#39;]</span></p>
+
+</section>
+<section class='' data-state='' id='slide-8'>
+  <h2>User &#8594; Likes &#8594; Topic</h2>
+  <h3>Why graph db?</h3>
+
+<ol>
+<li>Relationships are first-class citizens of graph database</li>
+<li>High performance online query</li>
+<li>Good for building recommendation engine</li>
+</ol>
+
+</section>
+<section class='' data-state='' id='slide-9'>
+  <h2>User &#8594; Likes &#8594; Topic</h2>
+  <p>Neo4j with &quot;py2neo&quot;. Example:</p>
+
+<pre><code>from py2neo import Node, Relationship, Graph
+graph = Graph()
+userNode = Node(&#39;Seluser&#39;, name=&#39;name&#39;, id=jsonData&#39;user_id&#39;)
+topicNode = Node(&#39;topics&#39;, &#39;key&#39;, topicKey)
+likes = Relationship(user, &#39;topiclike&#39;, topic)
+graph.create(likes)
+</code></pre>
+
+</section>
+<section class='' data-state='' id='slide-10'>
+  <h2>User &#8594; Likes &#8594; Topic</h2>
+  <p><img src="assets/img/topic_graph.png" alt="width"></p>
+
+</section>
+<section class='' data-state='' id='slide-11'>
+  <h2>Recommendation Engine</h2>
+  <pre><code>query = (&#39;match (u1 {id:&quot;UZyNf0h26jNVvpHT-GF2oA&quot;})&#39;
+         &#39; - [rel:topiclike]-&gt; r &lt;- [re:topiclike] - (u2) &#39;
+         &#39;with count(r) as topiccounts, u2 as user2 &#39;
+         &#39;where topiccounts &gt; 2 return user2, topiccounts&#39;
+         &#39; order by topiccounts desc limit 10&#39;)
+result = graph.cypher.execute(query)
+</code></pre>
+
+</section>
+<section class='' data-state='' id='slide-12'>
+  <h2>Result</h2>
+  <table><thead>
+<tr>
+<th></th>
+<th>userid</th>
+<th>topiccounts</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>kGgAARL2UmvCcTRfiscjug</td>
+<td>20</td>
+</tr>
+<tr>
+<td>2</td>
+<td>4ozupHULqGyO42s3zNUzOQ</td>
+<td>19</td>
+</tr>
+<tr>
+<td>3</td>
+<td>DrWLhrK8WMZf7Jb-Oqc7ww</td>
+<td>16</td>
+</tr>
+<tr>
+<td>4</td>
+<td>90a6z--_CUrl84aCzZyPsg</td>
+<td>15</td>
+</tr>
+<tr>
+<td>5</td>
+<td>4G68oLRY3aHE5XUt_MUUcA</td>
+<td>12</td>
+</tr>
+<tr>
+<td>6</td>
+<td>iwUN95LIaEr75TZE_JC6bg</td>
+<td>11</td>
+</tr>
+<tr>
+<td>7</td>
+<td>pEVf8GRshP9HUkSpizc9LA</td>
+<td>10</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Ovpa3S8xD96dLE5eDxcxJg</td>
+<td>10</td>
+</tr>
+<tr>
+<td>9</td>
+<td>WmAyExqSWoiYZ5XEqpk_Uw</td>
+<td>9</td>
+</tr>
+<tr>
+<td>10</td>
+<td>lmiDCrmas8TxRsbIGZX9Pg</td>
+<td>9</td>
+</tr>
+</tbody></table>
+
+</section>
+    </div>
+  </div>
+</body>
+  <script src="libraries/frameworks/revealjs/lib/js/head.min.js"></script>
+  <script src="libraries/frameworks/revealjs/js/reveal.min.js"></script>
+  <script>
+  // Full list of configuration options available here:
+  // https://github.com/hakimel/reveal.js#configuration
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    theme: Reveal.getQueryHash().theme || 'default', 
+    transition: Reveal.getQueryHash().transition || 'default', 
+    dependencies: [
+    // Cross-browser shim that fully implements classList -
+    // https://github.com/eligrey/classList.js/
+      { src: 'libraries/frameworks/revealjs/lib/js/classList.js', condition: function() { return !document.body.classList;}},
+      // Zoom in and out with Alt+click
+      { src: 'libraries/frameworks/revealjs/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      // Speaker notes
+      { src: 'libraries/frameworks/revealjs/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+      // Remote control your reveal.js presentation using a touch device
+      //{ src: 'libraries/frameworks/revealjs/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+  });
+  </script>  <!-- Google Prettify -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
+<script src='libraries/highlighters/prettify/js/lang-r.js'></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+<!-- End Google Prettify --> 
+
+</html>
