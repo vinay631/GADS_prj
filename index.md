@@ -36,7 +36,7 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span>
 
 ---
 
-## Business Category
+## Business Categories
 ![height](assets/img/businessCategory.png)
 
 ---
@@ -111,7 +111,7 @@ wordnet_lemmatizer.lemmatize(‘are’, pos=’v’) # u'be
 "...is a generative model that allows sets of observations to be explained by unobserved groups that explain why some parts of the data are similar." 
 <br>
 - In LDA, a document is a mixture of a small number of topics and that each word's creation is attributable to one of the document's topics 
-- LDA is similar to LSA except in LDA topic distribution is assumed to have Dirichlet prior.
+- LDA is similar to pLSA except in LDA topic distribution is assumed to have Dirichlet prior.
 - Using python package "gensim"
 
 ---
