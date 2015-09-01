@@ -36,6 +36,23 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span>
 
 ---
 
+## Business Category
+![height](assets/img/businessCategory.png)
+
+---
+
+## Ratings by day of week
+
+![height](assets/img/ratingCountByDay.png)
+
+---
+
+## Average rating text length
+
+![height](assets/img/avgRatingLength.png)
+
+---
+
 ## Method Overview
 1. Uncover hidden dimensions of ratings and review text combined
 2. Use the hidden dimensions from review texts to find user preference
