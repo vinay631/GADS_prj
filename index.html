@@ -44,7 +44,7 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span></p
 
 </section>
 <section class='' data-state='' id='slide-4'>
-  <h2>Methodology</h2>
+  <h2>Method Overview</h2>
   <ol>
 <li>Uncover hidden dimensions of ratings and review text combined</li>
 <li>Use the hidden dimensions from review texts to find user preference</li>
@@ -54,10 +54,8 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span></p
 
 </section>
 <section class='' data-state='' id='slide-5'>
-  <h2>Methodology</h2>
-  <h3>Training</h3>
-
-<p><span style="font-weight:bold; font-size:40pt";>Tokenize Reviews<span>
+  <h2>Training</h2>
+  <p><span style="font-weight:bold; font-size:40pt";>Tokenize Reviews<span>
 <span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
 <span style="font-weight:bold; font-size:40pt";>Remove stop words<span>
 <span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
@@ -70,7 +68,48 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span></p
 <span style="font-weight:bold; font-size:40pt";>Label latent topics</span></p>
 
 </section>
-<section class='' data-state='' id='slide-6'>
+<section>
+   <section class='' data-state=''>
+    <h2>Tokenization and removal of stop words</h2>
+    <ol>
+<li>Process of breaking stream of text into words, symbols, phrases or other meaningful elements called tokens.</li>
+<li>Certain characters like punctuations might be excluded
+<br>
+An example: &quot;Few things are harder to put up with than a good example.&quot;
+<br>
+can be tokenized into:
+<br> [&quot;few&quot;, &quot;things&quot;, &quot;are&quot;, &quot;harder&quot;, &quot;to&quot;, &quot;put&quot;, &quot;up&quot;, &quot;with&quot;, &quot;than&quot;, &quot;a&quot;, &quot;good&quot;, &quot;example&quot;]</li>
+<li>Stop words like are, to, up and a can be ignored as they are not important</li>
+</ol>
+
+    <aside class='notes'>
+      
+    </aside>
+   </section>
+</section>
+<section>
+   <section class='' data-state=''>
+    <h2>POS Tagging</h2>
+    <p>Process of classifying words into their parts of speech based on its definition as well as its context.</p>
+
+<p>[(&#39;Few&#39;, &#39;JJ&#39;), (&#39;things&#39;, &#39;NNS&#39;), (&#39;harder&#39;, &#39;JJR&#39;), (&#39;put&#39;, &#39;VB&#39;), (&#39;up&#39;, &#39;RP&#39;), (&#39;than&#39;, &#39;IN&#39;), (&#39;good&#39;, &#39;JJ&#39;), (&#39;example&#39;, &#39;NN&#39;)]</p>
+
+    <aside class='notes'>
+      
+    </aside>
+   </section>
+</section>
+<section class='' data-state='' id='slide-8'>
+  <h2>Lemmatization</h2>
+  <p>&quot;Process of grouping diffrent inflected forms of word so that they can be analyzed as single word&quot;</p>
+
+<pre><code>wordnet_lemmatizer.lemmatize(‘aardwolves’) # u&#39;aardwolf&#39;
+wordnet_lemmatizer.lemmatize(‘is’, pos=’v’) # u&#39;be&#39;
+wordnet_lemmatizer.lemmatize(‘are’, pos=’v’) # u&#39;be
+</code></pre>
+
+</section>
+<section class='' data-state='' id='slide-9'>
   <h2>Latent Dirichlet Allocation</h2>
   <p>&quot;...is a generative model that allows sets of observations to be explained by unobserved groups that explain why some parts of the data are similar.&quot; 
 <br></p>
@@ -82,7 +121,7 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span></p
 </ul>
 
 </section>
-<section class='' data-state='' id='slide-7'>
+<section class='' data-state='' id='slide-10'>
   <h2>Model prediction example</h2>
   <p><span style="color:#EAB9B9">&quot;I love this place and eat here at least once a week. Their pad si yew, pad Thai, dumplings, Siam rolls, and their curries are their best dishes. Especially the curry. You can&#39;t go wrong at Thai moon, so I suggest you go and enjoy the food!&quot;</span>
 <br><br>
@@ -90,7 +129,7 @@ Model prediction:
 <br><span style="color:green">[&#39;scores&#39;: u&#39;0.060*thai + 0.036*food + 0.032*curry + 0.028*lunch + 0.027*spicy + 0.023*place + 0.021*tea + 0.019*dish + 0.017*chicken + 0.015*time&#39;]</span></p>
 
 </section>
-<section class='' data-state='' id='slide-8'>
+<section class='' data-state='' id='slide-11'>
   <h2>User &#8594; Likes &#8594; Topic</h2>
   <h3>Why graph db?</h3>
 
@@ -101,7 +140,7 @@ Model prediction:
 </ol>
 
 </section>
-<section class='' data-state='' id='slide-9'>
+<section class='' data-state='' id='slide-12'>
   <h2>User &#8594; Likes &#8594; Topic</h2>
   <p>Neo4j with &quot;py2neo&quot;. Example:</p>
 
@@ -114,12 +153,12 @@ graph.create(likes)
 </code></pre>
 
 </section>
-<section class='' data-state='' id='slide-10'>
+<section class='' data-state='' id='slide-13'>
   <h2>User &#8594; Likes &#8594; Topic</h2>
   <p><img src="assets/img/topic_graph.png" alt="height"></p>
 
 </section>
-<section class='' data-state='' id='slide-11'>
+<section class='' data-state='' id='slide-14'>
   <h2>Recommendation Engine</h2>
   <pre><code>query = (&#39;match (u1 {id:&quot;UZyNf0h26jNVvpHT-GF2oA&quot;})&#39;
          &#39; - [rel:topiclike]-&gt; r &lt;- [re:topiclike] - (u2) &#39;
@@ -130,7 +169,7 @@ result = graph.cypher.execute(query)
 </code></pre>
 
 </section>
-<section class='' data-state='' id='slide-12'>
+<section class='' data-state='' id='slide-15'>
   <h2>Result</h2>
   <table><thead>
 <tr>
@@ -190,6 +229,17 @@ result = graph.cypher.execute(query)
 <td>9</td>
 </tr>
 </tbody></table>
+
+<h2>-</h2>
+
+</section>
+<section class='' data-state='' id='slide-16'>
+  <h2>Future Work</h2>
+  <ol>
+<li>Find trendsetters</li>
+<li>Location aware recommendation</li>
+<li>Predict usefulness of review texts</li>
+</ol>
 
 </section>
     </div>

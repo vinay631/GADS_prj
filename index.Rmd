@@ -36,7 +36,7 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span>
 
 ---
 
-## Methodology
+## Method Overview
 1. Uncover hidden dimensions of ratings and review text combined
 2. Use the hidden dimensions from review texts to find user preference
 3. Build a graph database of user - prefers - latent topic
@@ -44,8 +44,7 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span>
 
 ---
 
-## Methodology
-### Training
+## Training
 <span style="font-weight:bold; font-size:40pt";>Tokenize Reviews<span>
 <span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
 <span style="font-weight:bold; font-size:40pt";>Remove stop words<span>
@@ -57,6 +56,37 @@ Number of Reviews: <span style="color:green; font-weight:bold">1569264</span>
 <span style="font-weight:bold; font-size:40pt";>Train LDA</span>
 <span style="color:green; font-weight:bold; font-size:40pt";> &#8594;</span>
 <span style="font-weight:bold; font-size:40pt";>Label latent topics</span>
+
+--- &vertical
+
+## Tokenization and removal of stop words
+
+1. Process of breaking stream of text into words, symbols, phrases or other meaningful elements called tokens.
+2. Certain characters like punctuations might be excluded
+<br>
+An example: "Few things are harder to put up with than a good example."
+<br>
+can be tokenized into:
+<br> ["few", "things", "are", "harder", "to", "put", "up", "with", "than", "a", "good", "example"]
+3. Stop words like are, to, up and a can be ignored as they are not important
+
+--- &vertical
+
+## POS Tagging
+
+Process of classifying words into their parts of speech based on its definition as well as its context.
+
+[('Few', 'JJ'), ('things', 'NNS'), ('harder', 'JJR'), ('put', 'VB'), ('up', 'RP'), ('than', 'IN'), ('good', 'JJ'), ('example', 'NN')]
+
+--- 
+
+## Lemmatization
+"Process of grouping diffrent inflected forms of word so that they can be analyzed as single word"
+
+```
+wordnet_lemmatizer.lemmatize(‘aardwolves’) # u'aardwolf'
+wordnet_lemmatizer.lemmatize(‘is’, pos=’v’) # u'be'
+wordnet_lemmatizer.lemmatize(‘are’, pos=’v’) # u'be
 
 ---
 
@@ -130,3 +160,12 @@ result = graph.cypher.execute(query)
   9 | WmAyExqSWoiYZ5XEqpk_Uw |           9
  10 | lmiDCrmas8TxRsbIGZX9Pg |           9
  
+## -
+
+---
+
+## Future Work
+
+1. Find trendsetters
+2. Location aware recommendation
+3. Predict usefulness of review texts
